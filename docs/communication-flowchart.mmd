@@ -1,0 +1,34 @@
+flowchart LR
+  user((User))
+  browser[Web Dashboard<br/>public/index.html]
+  app[Node.js App<br/>Express + REST APIs]
+  db[(MongoDB)]
+  broker[(Mosquitto MQTT Broker)]
+  esp[ESP32 Reminder Device]
+  ntp[NTP Server]
+  lan{{Local WiFi / LAN}}
+  nodered[Node-RED<br/>Optional automation]
+  flows[(node-red-flows.json)]
+
+  user -->|Log in, register devices,
+  create medicine schedules| browser
+  browser <-->|HTTP UI + session auth| app
+  app <-->|Read / write users,
+  devices, medicines, intake| db
+
+  app <-->|Publish / subscribe| broker
+  esp <-->|MQTT schedule request,
+  intake, heartbeat| broker
+  broker -->|Schedule JSON| esp
+
+  esp -->|Time sync| ntp
+  esp --> lan
+  lan --> app
+  lan --> broker
+  esp -->|HTTP fallback / compatibility| app
+
+  nodered -->|Import| flows
+  nodered <-->|MQTT / HTTP automation| broker
+  nodered <-->|Optional admin flows| app
+
+  app -->|Serve dashboard assets| browser
