@@ -1,0 +1,13 @@
+backend/node_modules/
+backend/.env
+backend/.DS_Store
+backend/Thumbs.db
+firmware/*.elf
+firmware/*.bin
+firmware/*.hex
+firmware/*.map
+firmware/*.tmp
+firmware/*.log
+*.log
+.DS_Store
+Thumbs.db

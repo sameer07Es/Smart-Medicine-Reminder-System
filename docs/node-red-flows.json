@@ -1,0 +1,9 @@
+[
+  {
+    "id": "smsr_http_tab",
+    "type": "tab",
+    "label": "SMSR HTTP",
+    "disabled": false,
+    "info": "ESP32 now communicates directly with the Node.js API over HTTP. Legacy bridge flow has been removed."
+  }
+]

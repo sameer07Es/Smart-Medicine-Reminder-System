@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Medicine Reminder System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Login/Register Form -->
+    <div id="auth-section" class="auth-container">
+      <h1>Medicine Reminder System</h1>
+      
+      <div class="auth-form">
+        <h2 id="form-title">Login</h2>
+        
+        <form id="auth-form">
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="email" id="email" placeholder="Email" style="display:none;">
+          <input type="password" id="password" placeholder="Password" required>
+          <input type="password" id="confirm-password" placeholder="Confirm Password" style="display:none;">
+          
+          <button type="submit" id="submit-btn">Login</button>
+          <p id="toggle-form">Don't have an account? <a href="#">Register</a></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none;">
+      <header class="dashboard-header">
+        <h1>Medicine Reminder System</h1>
+        <div class="user-info">
+          <span id="welcome-text"></span>
+          <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <nav class="dashboard-nav">
+        <button class="nav-btn active" data-view="devices">Devices</button>
+        <button class="nav-btn" data-view="medicines">Medicines</button>
+        <button class="nav-btn" data-view="weekly">Weekly Report</button>
+      </nav>
+
+      <main class="dashboard-main">
+        <!-- Devices View -->
+        <div id="devices-view" class="view-section">
+          <div class="summary-section">
+            <div class="card">
+              <h3>Total Devices</h3>
+              <p id="total-devices-count">-</p>
+            </div>
+            <div class="card">
+              <h3>Active Devices</h3>
+              <p id="active-devices-count">-</p>
+            </div>
+            <div class="card">
+              <h3>Today's Medicines</h3>
+              <p id="today-medicines-count">-</p>
+            </div>
+          </div>
+
+          <section class="content-section">
+            <div class="section-header">
+              <h2>Connected Devices</h2>
+            </div>
+            <div id="connected-devices-list" class="items-list">
+              <p>Loading connected devices...</p>
+            </div>
+          </section>
+
+          <section class="content-section">
+            <div class="section-header">
+              <h2>My Devices</h2>
+              <button id="add-device-btn" class="btn-primary">Register Device</button>
+            </div>
+            
+            <div id="devices-list" class="items-list">
+              <p>Loading devices...</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Medicines View -->
+        <div id="medicines-view" class="view-section" style="display:none;">
+          <section class="content-section">
+            <div class="section-header">
+              <h2>Medicine Schedules</h2>
+              <button id="add-medicine-btn" class="btn-primary">Add Medicine</button>
+            </div>
+
+            <div class="filter-section">
+              <label for="device-filter">Filter by Device:</label>
+              <select id="device-filter">
+                <option value="">All Devices</option>
+              </select>
+            </div>
+            
+            <div id="medicines-list" class="items-list">
+              <p>Loading medicines...</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Weekly Report View -->
+        <div id="weekly-view" class="view-section" style="display:none;">
+          <section class="content-section">
+            <h2>Weekly Medicine Intake Report</h2>
+
+            <div class="filter-section">
+              <label for="report-device-filter">Device:</label>
+              <select id="report-device-filter">
+                <option value="">All Devices</option>
+              </select>
+            </div>
+
+            <div id="weekly-stats" class="stats-section">
+              <p>Loading weekly report...</p>
+            </div>
+
+            <div id="intake-history" class="history-section">
+              <h3>Recent Intake History</h3>
+              <div id="history-list">
+                <p>Loading history...</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Register Device Modal -->
+        <div id="device-modal" class="modal">
+          <div class="modal-content">
+            <span class="close" data-modal="device">&times;</span>
+            <h2 id="device-modal-title">Register Device</h2>
+            
+            <form id="device-form">
+              <input type="hidden" id="device-id">
+              
+              <div class="form-group">
+                <label for="device-name">Device Name *</label>
+                <input type="text" id="device-name" placeholder="e.g., MED_001" required>
+                <small>Must match the ESP32 device name</small>
+              </div>
+              
+              <div class="form-group">
+                <label for="device-nickname">Nickname *</label>
+                <input type="text" id="device-nickname" placeholder="e.g., John's Medicine Box" required>
+              </div>
+              
+              <button type="submit" class="btn-primary">Save Device</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Add/Edit Medicine Modal -->
+        <div id="medicine-modal" class="modal">
+          <div class="modal-content">
+            <span class="close" data-modal="medicine">&times;</span>
+            <h2 id="medicine-modal-title">Add Medicine</h2>
+            
+            <form id="medicine-form">
+              <input type="hidden" id="medicine-id">
+              
+              <div class="form-group">
+                <label for="medicine-device">Device *</label>
+                <select id="medicine-device" required>
+                  <option value="">Select Device</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="medicine-name">Medicine Name *</label>
+                <input type="text" id="medicine-name" placeholder="e.g., Aspirin" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="medicine-dosage">Dosage *</label>
+                <input type="text" id="medicine-dosage" placeholder="e.g., 100mg" required>
+              </div>
+              
+              <div class="form-group">
+                <label>Times of Day *</label>
+                <div id="times-container">
+                  <div class="time-input-group">
+                    <input type="time" class="medicine-time" required>
+                    <button type="button" class="btn-remove-time">Remove</button>
+                  </div>
+                </div>
+                <button type="button" id="add-time-btn" class="btn-secondary">Add Time</button>
+              </div>
+              
+              <div class="form-group">
+                <label>Active Days *</label>
+                <div class="days-selector">
+                  <label><input type="checkbox" class="day-checkbox" value="0"> Sun</label>
+                  <label><input type="checkbox" class="day-checkbox" value="1"> Mon</label>
+                  <label><input type="checkbox" class="day-checkbox" value="2"> Tue</label>
+                  <label><input type="checkbox" class="day-checkbox" value="3"> Wed</label>
+                  <label><input type="checkbox" class="day-checkbox" value="4"> Thu</label>
+                  <label><input type="checkbox" class="day-checkbox" value="5"> Fri</label>
+                  <label><input type="checkbox" class="day-checkbox" value="6"> Sat</label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="medicine-active">
+                  <input type="checkbox" id="medicine-active" checked>
+                  Active Schedule
+                </label>
+              </div>
+              
+              <button type="submit" class="btn-primary">Save Medicine</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
